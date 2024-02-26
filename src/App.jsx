@@ -1,22 +1,15 @@
-import React from 'react';
-import Home from './pages/Home';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
-import CartPage from './pages/CartPage';
-
-
-import {
-  createBrowserRouter,
-  RouterProvider
-} from "react-router-dom";
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/Home";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import CartPage from "./pages/CartPage";
+import Checkout from "./pages/CheckoutPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: 
-      <Home></Home>
-  
+    element: <Home></Home>,
   },
   {
     path: "/signup",
@@ -24,18 +17,26 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginPage></LoginPage>
+    element: <LoginPage></LoginPage>,
   },
   {
     path: "/cart",
-    element: <CartPage></CartPage>
-  }
+    element: <CartPage></CartPage>,
+  },
+  {
+    path: "/checkout",
+    element: <Checkout></Checkout>,
+  },
+  {
+    path: "/product-detail",
+    element: <ProductDetailPage></ProductDetailPage>,
+  },
 ]);
 
 function App() {
   return (
     <div className="App">
-      <RouterProvider router={router} /> 
+      <RouterProvider router={router} />
     </div>
   );
 }
