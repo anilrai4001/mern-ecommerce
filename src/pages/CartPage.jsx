@@ -6,7 +6,6 @@ const CartPage = () => {
   return (
     <div>
       <Navbar>
-
         <Cart></Cart>
       </Navbar>
     </div>
