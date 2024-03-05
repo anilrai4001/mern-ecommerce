@@ -6,6 +6,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { selectItems } from "../cart/cartSlice";
+import { useSelector } from "react-redux";
 
 const user = {
   name: "Tom Cook",
@@ -18,9 +20,9 @@ const navigation = [
   { name: "Team", href: "#", current: false },
 ];
 const userNavigation = [
-  { name: "Your Profile", link: '/profile'},
-  { name: "Settings", link: '/setting'},
-  { name: "Sign out", link: '/login'},
+  { name: "Your Profile", link: "/profile" },
+  { name: "Settings", link: "/setting" },
+  { name: "Sign out", link: "/login" },
 ];
 
 function classNames(...classes) {
@@ -28,6 +30,8 @@ function classNames(...classes) {
 }
 
 export default function Navbar({ children }) {
+  const items = useSelector(selectItems);
+
   return (
     <>
       <div className="min-h-full">
@@ -38,12 +42,12 @@ export default function Navbar({ children }) {
                 <div className="flex h-16 items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <Link to='/'>
-                      <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        alt="Your Company"
-                      />
+                      <Link to="/">
+                        <img
+                          className="h-8 w-8"
+                          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                          alt="Your Company"
+                        />
                       </Link>
                     </div>
                     <div className="hidden md:block">
@@ -72,9 +76,7 @@ export default function Navbar({ children }) {
                         to="/cart"
                         className="relative flex items-center rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                       >
-                        <button type="button"
-                        
-                        >
+                        <button type="button">
                           <span className="absolute -inset-1.5" />
 
                           <ShoppingCartIcon
@@ -82,9 +84,11 @@ export default function Navbar({ children }) {
                             aria-hidden="true"
                           />
                         </button>
-                      <span className="z-10 inline-flex items-center rounded-full mb-6 -ml-4 bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/10">
-                        22
-                      </span>
+                        {items.length > 0 && (
+                          <span className="z-10 inline-flex items-center rounded-full mb-6 -ml-4 bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/10">
+                            {items.length}
+                          </span>
+                        )}
                       </Link>
 
                       {/* Profile dropdown */}
@@ -199,9 +203,11 @@ export default function Navbar({ children }) {
                           aria-hidden="true"
                         />
                       </button>
-                    <span className="z-10 inline-flex items-center rounded-full mb-6 -ml-4 bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/10">
-                      20
-                    </span>
+                      {items.length > 0 && (
+                        <span className="z-10 inline-flex items-center rounded-full mb-6 -ml-4 bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/10">
+                          {items.length}
+                        </span>
+                      )}
                     </Link>
                   </div>
                   <div className="mt-3 space-y-1 px-2">
