@@ -11,13 +11,17 @@ import {
   selectLoggedInUser,
   updateUserAsync,
 } from "../features/auth/authSlice";
-import { createOrderAsync } from "../features/order/orderSlice";
+import {
+  createOrderAsync,
+  selectCurrentOrder,
+} from "../features/order/orderSlice";
 
 const CheckoutPage = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
   const items = useSelector(selectItems);
   const user = useSelector(selectLoggedInUser);
+  const currentOrder = useSelector(selectCurrentOrder);
 
   const {
     register,
@@ -27,7 +31,7 @@ const CheckoutPage = () => {
   } = useForm();
 
   const [selectedAddress, setSelectedAddress] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const totalAmount = items.reduce(
     (amount, item) => amount + item.price * item.quantity,
@@ -53,18 +57,36 @@ const CheckoutPage = () => {
     setPaymentMethod(e.target.value);
   };
 
-  const handleOrder = (e)=>{
-    const orderData = {items,user,totalAmount,totalItems,paymentMethod,selectedAddress};
-    console.log(orderData);
-    dispatch(createOrderAsync(orderData))
+  const handleOrder = (e) => {
+    if (selectedAddress === null) {
+      alert("Add a new address or select from existing addresses");
+      return;
+    }
+    const orderData = {
+      items,
+      user,
+      totalAmount,
+      totalItems,
+      paymentMethod,
+      selectedAddress,
+      status: "pending", // other staus could be: received/shipped/delivered
+    };
+    // console.log(orderData);
+    dispatch(createOrderAsync(orderData));
     //todo: navigate to order success page
     //todo: clear cart after successful order
     //todo: change stock of ordered items on server
-  }
+  };
 
   return (
     <>
       {items.length === 0 && <Navigate to="/cart" replace={true}></Navigate>}
+      {currentOrder && (
+        <Navigate
+          to={`/order-success/${currentOrder.id}`}
+          replace={true}
+        ></Navigate>
+      )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
           <div className="lg:col-span-3">
@@ -284,16 +306,14 @@ const CheckoutPage = () => {
                               <p className="mt-1 text-ellipsis text-xs leading-5 text-gray-500">
                                 {address.pincode}
                               </p>
+                              <p className="text-sm leading-6 text-gray-900">
+                                {address.number}
+                              </p>
+                              <p className="text-sm leading-6 text-gray-500">
+                                {address.email}
+                              </p>
                             </div>
                           </label>
-                        </div>
-                        <div className="hidden sm:flex sm:flex-col sm:items-end">
-                          <p className="text-sm leading-6 text-gray-900">
-                            {address.number}
-                          </p>
-                          <p className="text-sm leading-6 text-gray-500">
-                            {address.email}
-                          </p>
                         </div>
                       </li>
                     ))}
@@ -315,7 +335,7 @@ const CheckoutPage = () => {
                             name="payments"
                             type="radio"
                             value="cash"
-                            checked={paymentMethod==='cash'}
+                            defaultChecked
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           />
                           <label
@@ -332,7 +352,6 @@ const CheckoutPage = () => {
                             name="payments"
                             type="radio"
                             value="card"
-                            checked={paymentMethod==='card'}
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                           />
                           <label

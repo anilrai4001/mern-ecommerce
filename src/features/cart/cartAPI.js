@@ -44,3 +44,20 @@ export function deleteItemFromCart(itemId) {
     resolve({ data:{id:itemId} });
   });
 }
+
+export async function resetCart(userId) {
+  try {
+    // get all items of user's cart - and then delete each
+    const response = await fetchItemsByUserId(userId);
+    const items = await response.data;
+
+    for (const item of items) {
+      await deleteItemFromCart(item.id);
+    }
+
+    return { status: 'success' };
+  } catch (error) {
+    console.error('Error resetting cart:', error);
+    return { status: 'error', error };
+  }
+}
